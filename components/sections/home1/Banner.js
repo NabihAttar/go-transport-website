@@ -129,7 +129,7 @@ Banner() {
           <div className="banner-one__content">
             <div className="banner-one__content-left wow fadeInLeft" data-wow-delay="0ms"
               data-wow-duration="1500ms">
-              <h2 >Go Futher <br />
+              <h2 >Go Further <br />
                 <span style={{ color: "rgba(137, 242, 255, 1)" }}>Go Global</span></h2>
               {/* <p>Specialist In Modern <br /> Transportation </p> */}
             </div>
