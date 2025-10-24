@@ -34,7 +34,7 @@ export default function Header1({ scroll, handlePopup, handleMobileMenu }) {
                                                         </div>
 
                                                         <div className="text-box">
-                                                            <p><span>Mail Us</span> <Link href="mailto:gotransport@gmail.com">[gotransport@gmail.com]</Link>
+                                                            <p><span>Mail Us</span> <Link href="mailto:gotransport@gmail.com">gotransport@gmail.com</Link>
                                                             </p>
                                                         </div>
                                                     </li>

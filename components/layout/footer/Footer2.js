@@ -103,7 +103,7 @@ export default function Footer2() {
                                                     <span className="icon-email"></span>
                                                 </div>
                                                 <div className="text-box">
-                                                    <p><Link href="mailto:yourmail@email.com">gotransport@gmail.com</Link></p>
+                                                    <p><Link href="mailto:gotransport@gmail.com">gotransport@gmail.com</Link></p>
                                                     {/* <p><Link href="mailto:yourmail@email.com">gotransport@gmail.com</Link></p> */}
                                                 </div>
                                             </li>
