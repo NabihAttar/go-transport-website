@@ -1,11 +1,9 @@
-'use client'
-import Link from "next/link"
-import { Autoplay, Navigation, Pagination } from "swiper/modules"
-import { Swiper, SwiperSlide } from "swiper/react"
-import ModalVideo from 'react-modal-video'
-import { useState } from 'react'
-
-
+"use client";
+import Link from "next/link";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import ModalVideo from "react-modal-video";
+import { useState } from "react";
 
 const swiperOptions = {
   modules: [Autoplay, Pagination, Navigation],
@@ -13,41 +11,45 @@ const swiperOptions = {
   spaceBetween: 0,
   loop: true,
   navigation: {
-    nextEl: '.h1n',
-    prevEl: '.h1p',
+    nextEl: ".h1n",
+    prevEl: ".h1p",
   },
   pagination: {
-    el: '.swiper-pagination',
+    el: ".swiper-pagination",
     clickable: true,
   },
-}
+};
 
-export default function 
-Banner() {
-  const [isOpen, setOpen] = useState(false)
+export default function Banner() {
+  const [isOpen, setOpen] = useState(false);
 
   return (
     <>
-      <section className="banner-one"
-       style={{
-    background: 'linear-gradient(to right, #0d131d, #253D60)',
-  }}
-  >
-<div
-  className="banner-one__pattern"
- 
-/>
-
+      <section
+        className="banner-one"
+        style={{
+          background: "linear-gradient(to right, #0d131d, #253D60)",
+        }}
+      >
+        <div className="banner-one__pattern" />
 
         <div className="banner-one__pattern2">
           <img src="assets/images/pattern/banner-v1-pattern2.png" alt="#" />
         </div>
 
         <div className="banner-one__img1">
-          <img className="float-bob-x" src="assets/images/banner/truck.png" alt="#" />
+          <img
+            className="float-bob-x"
+            src="assets/images/banner/truck.png"
+            alt="#"
+          />
         </div>
         <div className="banner-one__img5">
-          <img className="float-bob-y" src="assets/images/banner/boxes.png" alt="#" />
+          <img
+            className="float-bob-y"
+            src="assets/images/banner/boxes.png"
+            alt="#"
+          />
         </div>
         <div className="shape1 rotate-me">
           <img src="assets/images/shapes/Frame 17 (1).png" alt="#" />
@@ -57,7 +59,9 @@ Banner() {
           <div className="banner-one__location clearfix">
             {/* Turkey */}
             <div className="banner-one__location-single style1">
-              <div className="round-box"><div className="bdr" /></div>
+              <div className="round-box">
+                <div className="bdr" />
+              </div>
               <div className="content-box">
                 <div className="img-box">
                   <img src="assets/images/flags/turkey.png" alt="Turkey flag" />
@@ -71,7 +75,9 @@ Banner() {
 
             {/* China */}
             <div className="banner-one__location-single style2">
-              <div className="round-box"><div className="bdr" /></div>
+              <div className="round-box">
+                <div className="bdr" />
+              </div>
               <div className="content-box">
                 <div className="img-box">
                   <img src="assets/images/flags/china.png" alt="China flag" />
@@ -84,9 +90,14 @@ Banner() {
             </div>
 
             {/* France */}
-            <div className="banner-one__location-single style3">
-              <div className="round-box"><div className="bdr" /></div>
-              <div className="content-box">
+            <div
+              className="banner-one__location-single style3"
+              style={{ zIndex: 999 }}
+            >
+              <div className="round-box">
+                <div className="bdr" />
+              </div>
+              <div className="content-box" style={{ zIndex: 1000 }}>
                 <div className="img-box">
                   <img src="assets/images/flags/france.png" alt="France flag" />
                 </div>
@@ -99,7 +110,9 @@ Banner() {
 
             {/* Italy */}
             <div className="banner-one__location-single style4">
-              <div className="round-box"><div className="bdr" /></div>
+              <div className="round-box">
+                <div className="bdr" />
+              </div>
               <div className="content-box">
                 <div className="img-box">
                   <img src="assets/images/flags/italy.png" alt="Italy flag" />
@@ -113,7 +126,9 @@ Banner() {
 
             {/* Dubai */}
             <div className="banner-one__location-single style5">
-              <div className="round-box"><div className="bdr" /></div>
+              <div className="round-box">
+                <div className="bdr" />
+              </div>
               <div className="content-box">
                 <div className="img-box">
                   <img src="assets/images/flags/dubai.png" alt="UAE flag" />
@@ -127,24 +142,37 @@ Banner() {
           </div>
 
           <div className="banner-one__content">
-            <div className="banner-one__content-left wow fadeInLeft" data-wow-delay="0ms"
-              data-wow-duration="1500ms">
-              <h2 >Go Further <br />
-                <span style={{ color: "rgba(137, 242, 255, 1)" }}>Go Global</span></h2>
+            <div
+              className="banner-one__content-left wow fadeInLeft"
+              data-wow-delay="0ms"
+              data-wow-duration="1500ms"
+            >
+              <h2>
+                Go Further <br />
+                <span style={{ color: "rgba(137, 242, 255, 1)" }}>
+                  Go Global
+                </span>
+              </h2>
               {/* <p>Specialist In Modern <br /> Transportation </p> */}
             </div>
 
-            <div className="banner-one__content-right wow fadeInRight" data-wow-delay="0ms"
-              data-wow-duration="1500ms">
+            <div
+              className="banner-one__content-right wow fadeInRight"
+              data-wow-delay="0ms"
+              data-wow-duration="1500ms"
+            >
               <div className="banner-one__content-right-text">
-                <p>GTT– Go Transport and Transit is your go-to partner for reliable<br />
-                  logistics and trade solutions</p>
+                <p>
+                  GTT– Go Transport and Transit is your go-to partner for
+                  reliable
+                  <br />
+                  logistics and trade solutions
+                </p>
               </div>
 
-
-
               <div className="banner-one__content-right-btn">
-                <Link className="thm-btn" href="about">About Us
+                <Link className="thm-btn" href="about">
+                  About Us
                   <i className="icon-right-arrow21"></i>
                   <span className="hover-btn hover-bx"></span>
                   <span className="hover-btn hover-bx2"></span>
@@ -157,5 +185,5 @@ Banner() {
         </div>
       </section>
     </>
-  )
+  );
 }
