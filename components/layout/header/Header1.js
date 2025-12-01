@@ -24,7 +24,7 @@ export default function Header1({ scroll, handlePopup, handleMobileMenu }) {
                                                         </div>
 
                                                         <div className="text-box">
-                                                            <p><span>Talk to Us</span> <Link href="tel:+96181411411">+961 81 411 411</Link></p>
+                                                            <p><span>Talk to Us</span> <Link href="tel:+96176071205">+961 76 071 205</Link></p>
                                                         </div>
                                                     </li>
 
@@ -34,7 +34,14 @@ export default function Header1({ scroll, handlePopup, handleMobileMenu }) {
                                                         </div>
 
                                                         <div className="text-box">
-                                                            <p><span>Mail Us</span> <Link href="mailto:gotransport@gmail.com">gotransport@gmail.com</Link>
+                                                            <p><span>Mail Us</span>
+                                                                <Link
+                                                                    href="mailto:Info@go-transport.com"
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    Info@go-transport.com
+                                                                </Link>
                                                             </p>
                                                         </div>
                                                     </li>
@@ -116,11 +123,11 @@ export default function Header1({ scroll, handlePopup, handleMobileMenu }) {
                                 <div className="main-header-one__bottom-left">
                                     <div className="logo-box">
                                         <Link href="/"><img src={fixImagePath("alwafaExportLogo/Group (5).png")}
-                                         alt="Alwafa Export"
-                                                            width={117}
-                                                            height={45}
-                                                            style={{ objectFit: "contain" }}
-                                            /></Link>
+                                            alt="Alwafa Export"
+                                            width={117}
+                                            height={45}
+                                            style={{ objectFit: "contain" }}
+                                        /></Link>
                                     </div>
 
                                     <div className="main-header-one__bottom-menu">

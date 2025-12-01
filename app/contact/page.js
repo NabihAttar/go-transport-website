@@ -149,12 +149,19 @@ export default function Home() {
                                             <span className="icon-email"></span>
                                         </div>
                                         <div className="content">
-                                            <h2>Email</h2>
-                                            <p>
-                                                <Link href="mailto:gotransport@gmail.com">gotransport@gmail.com</Link> <br />
-                                                {/* <Link href="mailto:gotransport@gmail.com">gotransport@gmail.com</Link> */}
-                                            </p>
-                                        </div>
+  <h2>Email</h2>
+  <p>
+    <Link
+      href="mailto:Info@go-transport.com"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Info@go-transport.com
+    </Link>
+    <br />
+  </p>
+</div>
+
                                     </li>
 
                                     <li className="contact-page__bottom-single">
@@ -164,8 +171,7 @@ export default function Home() {
                                         <div className="content">
                                             <h2>Phones</h2>
                                             <p>
-                                                <Link href="tel:+96181411411">+961 81 411 411</Link> <br />
-                                                {/* <Link href="tel:+96181411411">+961 81 411 411</Link> */}
+                                                <Link href="tel:+96176071205">+961 76 071 205</Link> <br />
                                             </p>
                                         </div>
                                     </li>

@@ -143,7 +143,7 @@ export default function Home() {
 
                                             <div className="text-box" >
                                                 <p style={{ color: "#89f2ff" }}>Make A Phone Call</p>
-                                                <h4><Link href="tel:+96181411411" style={{ color: "white" }}>+961 81 411 411</Link></h4>
+                                                <h4><Link href="tel:+96176071205" style={{ color: "white" }}>+961 76 071 205 </Link></h4>
                                             </div>
                                         </div>
                                     </div>

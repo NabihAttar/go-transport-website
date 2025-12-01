@@ -114,8 +114,12 @@ const MobileMenu = ({ isSidebar, handleMobileMenu, handleSidebar }) => {
           <ul className="mobile-nav__contact list-unstyled">
             <li>
               <i className="fa fa-envelope" />
-              <Link href="mailto:gotransport@gmail.com" onClick={handleNavClick}>
-                gotransport@gmail.com
+              <Link
+                href="mailto:Info@go-transport.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Info@go-transport.com
               </Link>
             </li>
             <li>
