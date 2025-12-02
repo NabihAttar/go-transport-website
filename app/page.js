@@ -1,34 +1,25 @@
+import Layout from "@/components/layout/Layout";
+import Banner from "@/components/sections/home1/Banner";
+import AboutHome1 from "@/components/sections/home1/About";
+import WhyChooseUs from "@/components/sections/home1/WhyChooseUs";
+import Services from "@/components/sections/home2/Services";
+import { getHomepage } from "@/core/repo";
 
-import Layout from "@/components/layout/Layout"
-import Banner from "@/components/sections/home1/Banner"
-import AboutHome1 from "@/components/sections/home1/About"
-import Service from "@/components/sections/home1/Service"
-import Projects from "@/components/sections/home1/Projects"
-import WhyChooseUs from "@/components/sections/home1/WhyChooseUs"
-import Skills from "@/components/sections/home1/Skills"
-import Testimonial from "@/components/sections/home1/Testimonial"
-import Faq from "@/components/sections/home1/Faq"
-import Cta from "@/components/sections/home1/Cta"
-import Funfacts from "@/components/sections/home1/Funfacts"
-import Team from "@/components/sections/home1/Team"
-import Blog from "@/components/sections/home1/Blog"
-import Brands from "@/components/sections/home1/Brands"
-import Services from "@/components/sections/home2/Services"
-import AboutHome2 from "@/components/sections/home2/About"
-
-export default function Home() {
-    return (
-        <div className="dark-version">
-            <Layout headerStyle={1} footerStyle={2}>
-                <Banner />
-                <AboutHome1 />
-                {/* <Service />
+export default async function Home() {
+  const homepageData = await getHomepage();
+  console.log(homepageData);
+  return (
+    <div className="dark-version">
+      <Layout headerStyle={1} footerStyle={2} initialData={homepageData}>
+        <Banner />
+        <AboutHome1 />
+        {/* <Service />
                 <AboutHome2 /> */}
-                <Services />
-                {/* <Projects /> */}
-                <WhyChooseUs />
-                {/* <Blog /> */}
-                {/* <Skills />
+        <Services />
+        {/* <Projects /> */}
+        <WhyChooseUs />
+        {/* <Blog /> */}
+        {/* <Skills />
                 <Testimonial />
                 <Faq />
                 <Cta />
@@ -36,8 +27,8 @@ export default function Home() {
                 <Team />
                 <Blog />
                 <Brands /> */}
-                {/* <Testimonial /> */}
-            </Layout>
-        </div>
-    )
+        {/* <Testimonial /> */}
+      </Layout>
+    </div>
+  );
 }
