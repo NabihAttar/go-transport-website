@@ -115,11 +115,11 @@ const MobileMenu = ({ isSidebar, handleMobileMenu, handleSidebar }) => {
             <li>
               <i className="fa fa-envelope" />
               <Link
-                href="mailto:Info@go-transport.com"
+                href="mailto:info@go-transport.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Info@go-transport.com
+                info@go-transport.com
               </Link>
             </li>
             <li>

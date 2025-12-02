@@ -36,11 +36,11 @@ export default function Header1({ scroll, handlePopup, handleMobileMenu }) {
                                                         <div className="text-box">
                                                             <p><span>Mail Us</span>
                                                                 <Link
-                                                                    href="mailto:Info@go-transport.com"
+                                                                    href="mailto:info@go-transport.com"
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                 >
-                                                                    Info@go-transport.com
+                                                                    info@go-transport.com
                                                                 </Link>
                                                             </p>
                                                         </div>

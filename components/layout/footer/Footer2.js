@@ -105,11 +105,11 @@ export default function Footer2() {
                                                             <div className="text-box">
                                                                 <p>
                                                                     <Link
-                                                                        href="mailto:Info@go-transport.com"
+                                                                        href="mailto:info@go-transport.com"
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                     >
-                                                                        Info@go-transport.com
+                                                                        info@go-transport.com
                                                                     </Link>
                                                                 </p>
                                                             </div>
