@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
-const CMS_BASE_URL =
-  process.env.NEXT_PUBLIC_CMS_URL || "http://95.217.183.52:1337";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 const FALLBACK_DESCRIPTION = `At GTT, logistics isn't just about moving goods; it's about building bridges across borders.
 We connect continents, empower commerce, and simplify international trade.
@@ -16,19 +14,35 @@ const FALLBACK_FEATURES = [
   { id: "feature-sea", label: "Sea Shipment" },
 ];
 
-const getImageUrl = (image) => {
+const FALLBACK_BIG_IMAGE = "assets/images/about/about-img1.png";
+const FALLBACK_SMALL_IMAGE = "assets/images/about/about-img2.png";
+
+const isAbsoluteUrl = (value = "") => /^https?:\/\//i.test(value);
+
+const isLocalAsset = (value = "") =>
+  value?.startsWith("assets/") || value?.startsWith("/assets/");
+
+const needsResolution = (value) =>
+  Boolean(value) && !isAbsoluteUrl(value) && !isLocalAsset(value);
+
+const extractMediaPath = (image) => {
   if (!image) return null;
+  if (typeof image === "string") return image;
+  if (Array.isArray(image)) {
+    return extractMediaPath(image[0]);
+  }
+  if (image?.data) {
+    return extractMediaPath(image.data);
+  }
+  return image?.url || image?.path || null;
+};
 
-  const normalizedImage =
-    image?.data?.attributes || image?.data || image || undefined;
-  const rawUrl =
-    typeof normalizedImage === "string"
-      ? normalizedImage
-      : normalizedImage?.url;
-
-  if (!rawUrl) return null;
-  if (rawUrl.startsWith("http")) return rawUrl;
-  return `${CMS_BASE_URL}${rawUrl}`;
+const deriveInitialImage = (path, fallback) => {
+  if (!path) return fallback;
+  if (isAbsoluteUrl(path) || isLocalAsset(path)) {
+    return path;
+  }
+  return fallback;
 };
 
 const normalizeFeatures = (featureData) => {
@@ -55,24 +69,100 @@ const normalizeFeatures = (featureData) => {
   return parsed.length ? parsed : FALLBACK_FEATURES;
 };
 
+const splitLines = (value = "") =>
+  value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+const useResolvedImages = (bigPath, smallPath) => {
+  const [imageUrls, setImageUrls] = useState({
+    big: FALLBACK_BIG_IMAGE,
+    small: FALLBACK_SMALL_IMAGE,
+  });
+
+  useEffect(() => {
+    const baseImages = {
+      big: deriveInitialImage(bigPath, FALLBACK_BIG_IMAGE),
+      small: deriveInitialImage(smallPath, FALLBACK_SMALL_IMAGE),
+    };
+
+    setImageUrls(baseImages);
+
+    const requestEntries = [];
+
+    if (needsResolution(bigPath)) {
+      requestEntries.push({ key: "big", path: bigPath });
+    }
+
+    if (needsResolution(smallPath)) {
+      requestEntries.push({ key: "small", path: smallPath });
+    }
+
+    if (!requestEntries.length) {
+      return;
+    }
+
+    const params = new URLSearchParams();
+    requestEntries.forEach(({ path }) => params.append("path", path));
+
+    let ignore = false;
+
+    fetch(`/api/getIMagesURL?${params.toString()}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to resolve image URLs");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (ignore) return;
+        const resolvedImages = { ...baseImages };
+
+        if (Array.isArray(data.urls)) {
+          requestEntries.forEach((entry, index) => {
+            const resolved = data.urls[index];
+            if (resolved) {
+              resolvedImages[entry.key] = resolved;
+            }
+          });
+        } else if (requestEntries.length === 1 && data.url) {
+          resolvedImages[requestEntries[0].key] = data.url;
+        }
+
+        setImageUrls(resolvedImages);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch image URLs:", error);
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [bigPath, smallPath]);
+
+  return imageUrls;
+};
+
 export default function About({ aboutSection }) {
-  const title = aboutSection?.title ?? "Our Company";
-  const subtitle = aboutSection?.subtitle ?? "Building Bridges Across Borders";
+  const title = aboutSection?.title?.trim() || "Our Company";
+  const subtitle =
+    aboutSection?.subtitle?.trim() || "Building Bridges Across Borders";
   const description = aboutSection?.description?.trim() || FALLBACK_DESCRIPTION;
-  const subtitleLines = subtitle
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-  const descriptionLines = description
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-  const features = normalizeFeatures(aboutSection?.feature);
-  const bigImage =
-    getImageUrl(aboutSection?.bigImage) || "assets/images/about/about-img1.png";
-  const smallImage =
-    getImageUrl(aboutSection?.smallImage) ||
-    "assets/images/about/about-img2.png";
+
+  const subtitleLines = useMemo(() => splitLines(subtitle), [subtitle]);
+  const descriptionLines = useMemo(
+    () => splitLines(description),
+    [description]
+  );
+  const features = useMemo(
+    () => normalizeFeatures(aboutSection?.feature),
+    [aboutSection?.feature]
+  );
+
+  const bigImagePath = extractMediaPath(aboutSection?.bigImage);
+  const smallImagePath = extractMediaPath(aboutSection?.smallImage);
+  const imageUrls = useResolvedImages(bigImagePath, smallImagePath);
 
   return (
     <>
@@ -95,12 +185,12 @@ export default function About({ aboutSection }) {
                   <img src="assets/images/shapes/points.png" alt="" />
                 </div>
                 <div className="about-one__img1 reveal">
-                  <img src={bigImage} alt="About section main" />
+                  <img src={imageUrls.big} alt="About section main" />
                 </div>
 
                 <div className="about-one__img2">
                   <div className="about-one__img2-inner reveal">
-                    <img src={smallImage} alt="About section secondary" />
+                    <img src={imageUrls.small} alt="About section secondary" />
                   </div>
 
                   <div className="shape3 float-bob-y">
@@ -128,10 +218,10 @@ export default function About({ aboutSection }) {
                   </div>
                   <h2 className="sec-title__title tg-element-title">
                     {subtitleLines.map((line, index) => (
-                      <span key={`subtitle-line-${index}`}>
+                      <Fragment key={`subtitle-line-${index}`}>
                         {line}
                         {index < subtitleLines.length - 1 && <br />}
-                      </span>
+                      </Fragment>
                     ))}
                   </h2>
                 </div>
@@ -139,10 +229,10 @@ export default function About({ aboutSection }) {
                 <div className="about-one__content-text1">
                   <p>
                     {descriptionLines.map((line, index) => (
-                      <span key={`about-desc-${index}`}>
+                      <Fragment key={`about-desc-${index}`}>
                         {line}
                         {index < descriptionLines.length - 1 && <br />}
-                      </span>
+                      </Fragment>
                     ))}
                   </p>
                 </div>
