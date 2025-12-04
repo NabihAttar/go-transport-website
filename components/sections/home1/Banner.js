@@ -20,8 +20,26 @@ const swiperOptions = {
   },
 };
 
-export default function Banner() {
+export default function Banner({ heroSection }) {
   const [isOpen, setOpen] = useState(false);
+  const normalizedHeroSection = Array.isArray(heroSection)
+    ? heroSection
+    : Array.isArray(heroSection?.data)
+      ? heroSection.data
+      : heroSection
+        ? [heroSection]
+        : [];
+  const heroContent = normalizedHeroSection[0] ?? {};
+
+  const headingTitle = heroContent?.title ?? "Go Furthe";
+  const headingSubtitle = heroContent?.subtitle ?? "Go Global";
+  const fallbackDescription =
+    "GTT– Go Transport and Transit is your go-to partner for reliable\nlogistics and trade solutions";
+  const rawDescription = heroContent?.description ?? fallbackDescription;
+  const descriptionLines = rawDescription
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
 
   return (
     <>
@@ -148,9 +166,9 @@ export default function Banner() {
               data-wow-duration="1500ms"
             >
               <h2>
-                Go Further <br />
+                {headingTitle} <br />
                 <span style={{ color: "rgba(137, 242, 255, 1)" }}>
-                  Go Global
+                  {headingSubtitle}
                 </span>
               </h2>
               {/* <p>Specialist In Modern <br /> Transportation </p> */}
@@ -163,10 +181,12 @@ export default function Banner() {
             >
               <div className="banner-one__content-right-text">
                 <p>
-                  GTT– Go Transport and Transit is your go-to partner for
-                  reliable
-                  <br />
-                  logistics and trade solutions
+                  {descriptionLines.map((line, index) => (
+                    <span key={`hero-desc-${index}`}>
+                      {line}
+                      {index < descriptionLines.length - 1 && <br />}
+                    </span>
+                  ))}
                 </p>
               </div>
 
