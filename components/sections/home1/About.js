@@ -1,88 +1,166 @@
-'use client'
-import Link from "next/link"
-import ReactCurvedText from 'react-curved-text'
+"use client";
 
-export default function About() {
+import Link from "next/link";
+
+const CMS_BASE_URL =
+  process.env.NEXT_PUBLIC_CMS_URL || "http://95.217.183.52:1337";
+
+const FALLBACK_DESCRIPTION = `At GTT, logistics isn't just about moving goods; it's about building bridges across borders.
+We connect continents, empower commerce, and simplify international trade.
+With a decade of experience and operations spanning Lebanon, Europe, Asia, and the Middle East,
+we offer the reliability of a global player with the agility of a local partner.`;
+
+const FALLBACK_FEATURES = [
+  { id: "feature-air", label: "Air Shipment" },
+  { id: "feature-land", label: "Land Shipment" },
+  { id: "feature-sea", label: "Sea Shipment" },
+];
+
+const getImageUrl = (image) => {
+  if (!image) return null;
+
+  const normalizedImage =
+    image?.data?.attributes || image?.data || image || undefined;
+  const rawUrl =
+    typeof normalizedImage === "string"
+      ? normalizedImage
+      : normalizedImage?.url;
+
+  if (!rawUrl) return null;
+  if (rawUrl.startsWith("http")) return rawUrl;
+  return `${CMS_BASE_URL}${rawUrl}`;
+};
+
+const normalizeFeatures = (featureData) => {
+  if (!Array.isArray(featureData)) {
+    return FALLBACK_FEATURES;
+  }
+
+  const parsed = featureData
+    .map((item, index) => {
+      if (!item) return null;
+      const label =
+        typeof item === "string"
+          ? item
+          : item?.feature || item?.title || item?.label || "";
+      if (!label) return null;
+
+      return {
+        id: item?.id ?? `feature-${index}`,
+        label,
+      };
+    })
+    .filter(Boolean);
+
+  return parsed.length ? parsed : FALLBACK_FEATURES;
+};
+
+export default function About({ aboutSection }) {
+  const title = aboutSection?.title ?? "Our Company";
+  const subtitle = aboutSection?.subtitle ?? "Building Bridges Across Borders";
+  const description = aboutSection?.description?.trim() || FALLBACK_DESCRIPTION;
+  const subtitleLines = subtitle
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const descriptionLines = description
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const features = normalizeFeatures(aboutSection?.feature);
+  const bigImage =
+    getImageUrl(aboutSection?.bigImage) || "assets/images/about/about-img1.png";
+  const smallImage =
+    getImageUrl(aboutSection?.smallImage) ||
+    "assets/images/about/about-img2.png";
+
   return (
     <>
-      <section className="about-one" style={{ backgroundColor: "rgb(14, 19, 30)" }}>
+      <section
+        className="about-one"
+        style={{ backgroundColor: "rgb(14, 19, 30)" }}
+      >
         <div className="container">
           <div className="row">
-            {/* was col-xl-5 */}
+            {/* Left column: imagery */}
             <div className="col-xl-5 col-lg-6">
               <div className="about-one__img">
                 <div className="shape1 float-bob-y">
-                  <img src="assets/images/shapes/airplane-down-about.png" alt="" />
+                  <img
+                    src="assets/images/shapes/airplane-down-about.png"
+                    alt=""
+                  />
                 </div>
                 <div className="shape2 float-bob-y">
                   <img src="assets/images/shapes/points.png" alt="" />
                 </div>
                 <div className="about-one__img1 reveal">
-                  <img src="assets/images/about/about-img1.png" alt="" />
+                  <img src={bigImage} alt="About section main" />
                 </div>
 
                 <div className="about-one__img2">
                   <div className="about-one__img2-inner reveal">
-                    <img src="assets/images/about/about-img2.png" alt="" />
+                    <img src={smallImage} alt="About section secondary" />
                   </div>
 
                   <div className="shape3 float-bob-y">
-                    <img src="assets/images/shapes/airplane-up-about.png" alt="" />
+                    <img
+                      src="assets/images/shapes/airplane-up-about.png"
+                      alt=""
+                    />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Start About One Content | was col-xl-7 */}
+            {/* Right column: content */}
             <div className="col-xl-7 col-lg-6">
               <div className="about-one__content">
                 <div className="sec-title tg-heading-subheading animation-style2">
                   <div className="sec-title__tagline">
                     <div className="line"></div>
                     <div className="text tg-element-title">
-                      <h4>Our Company</h4>
+                      <h4>{title}</h4>
                     </div>
                     <div className="icon">
                       <span className="icon-plane2 float-bob-x3"></span>
                     </div>
                   </div>
                   <h2 className="sec-title__title tg-element-title">
-                    Building Bridges<br />Across Borders
+                    {subtitleLines.map((line, index) => (
+                      <span key={`subtitle-line-${index}`}>
+                        {line}
+                        {index < subtitleLines.length - 1 && <br />}
+                      </span>
+                    ))}
                   </h2>
                 </div>
 
                 <div className="about-one__content-text1">
                   <p>
-                    At GTT, logistics isn't just about moving goods, it's about building bridges across borders.
-                    We connect continents, empower commerce, and simplify international trade. <br />
-                    With a decade of experience and operations spanning Lebanon, Europe, Asia, and the Middle East,
-                    we offer the reliability of a global player with the agility of a local partner.
+                    {descriptionLines.map((line, index) => (
+                      <span key={`about-desc-${index}`}>
+                        {line}
+                        {index < descriptionLines.length - 1 && <br />}
+                      </span>
+                    ))}
                   </p>
                 </div>
 
                 <div className="about-one__content-text2">
                   <div className="row">
-                    {/* change col-md-4 -> col-md-6 for tablet 2-up */}
-                    <div className="col-xl-4 col-lg-4 col-md-6">
-                      <div className="about-one__content-text2-single-top">
-                        <div className="icon"><span className="icon-check1"></span></div>
-                        <div className="title-box"><h3>Air Shipment</h3></div>
+                    {features.map((item) => (
+                      <div className="col-xl-4 col-lg-4 col-md-6" key={item.id}>
+                        <div className="about-one__content-text2-single-top">
+                          <div className="icon">
+                            <span className="icon-check1"></span>
+                          </div>
+                          <div className="title-box">
+                            <h3>{item.label}</h3>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="col-xl-4 col-lg-4 col-md-6">
-                      <div className="about-one__content-text2-single-top">
-                        <div className="icon"><span className="icon-check1"></span></div>
-                        <div className="title-box"><h3>Land Shipment</h3></div>
-                      </div>
-                    </div>
-
-                    <div className="col-xl-4 col-lg-4 col-md-6">
-                      <div className="about-one__content-text2-single-top">
-                        <div className="icon"><span className="icon-check1"></span></div>
-                        <div className="title-box"><h3>Sea Shipment</h3></div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
@@ -100,10 +178,9 @@ export default function About() {
                 </div>
               </div>
             </div>
-            {/* End About One Content */}
           </div>
         </div>
       </section>
     </>
-  )
+  );
 }

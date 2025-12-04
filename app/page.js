@@ -7,13 +7,14 @@ import { getHomepage } from "@/core/repo";
 
 export default async function Home() {
   const homepageData = await getHomepage();
-  console.log(homepageData.data.heroSection);
+  const heroSection = homepageData?.data?.heroSection;
+  const aboutSection = homepageData?.data?.aboutSection;
 
   return (
     <div className="dark-version">
       <Layout headerStyle={1} footerStyle={2} initialData={homepageData}>
-        <Banner heroSection={homepageData?.data?.heroSection} />
-        <AboutHome1 />
+        <Banner heroSection={heroSection} />
+        <AboutHome1 aboutSection={aboutSection} />
         <Services />
         <WhyChooseUs />
       </Layout>
