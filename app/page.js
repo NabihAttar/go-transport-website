@@ -9,14 +9,15 @@ export default async function Home() {
   const homepageData = await getHomepage();
   const heroSection = homepageData?.data?.heroSection;
   const aboutSection = homepageData?.data?.aboutSection;
-
+  const servicesSection = homepageData?.data?.servicesSection;
+  const whyUsSection = homepageData?.data?.whyUs;
   return (
     <div className="dark-version">
       <Layout headerStyle={1} footerStyle={2} initialData={homepageData}>
         <Banner heroSection={heroSection} />
         <AboutHome1 aboutSection={aboutSection} />
-        <Services />
-        <WhyChooseUs />
+        <Services servicesSection={servicesSection} />
+        <WhyChooseUs whyUsSection={whyUsSection} />
       </Layout>
     </div>
   );
