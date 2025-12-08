@@ -31,7 +31,7 @@ export default function Banner({ heroSection }) {
         : [];
   const heroContent = normalizedHeroSection[0] ?? {};
 
-  const headingTitle = heroContent?.title ?? "Go Furthe";
+  const headingTitle = heroContent?.title ?? "Go Further";
   const headingSubtitle = heroContent?.subtitle ?? "Go Global";
   const fallbackDescription =
     "GTT– Go Transport and Transit is your go-to partner for reliable\nlogistics and trade solutions";
