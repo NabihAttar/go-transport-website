@@ -5,9 +5,16 @@ const API_TOKEN =
 
 const HOMEPAGE_URL = `api/homepage?populate[0]=heroSection&populate[1]=aboutSection&populate[2]=aboutSection.bigImage&populate[3]=aboutSection.smallImage&populate[4]=aboutSection.feature&populate[5]=servicesSection&populate[6]=divider&populate[7]=whyUs&populate[8]=whyUs.features&populate[9]=whyUs.bigImage&populate[10]=whyUs.smallImage&populate[11]=servicesSection.services&populate[12]=servicesSection.services.icon`;
 
+const ABOUT_US_PAGE_URL = `api/aboutus-page?populate[0]=banner&populate[1]=banner.image&populate[2]=businessInfo&populate[3]=businessInfo.bigImage&populate[4]=businessInfo.smallImage&populate[5]=businessInfo.missionCard&populate[6]=businessInfo.vissionCard&populate[7]=whereWeOperate&populate[8]=whereWeOperate.image&populate[9]=whereWeOperate.countries`;
+
 apiService.setToken(API_TOKEN);
 
 export const getHomepage = async () => {
   const response = await apiService.get(HOMEPAGE_URL);
+  return response.data;
+};
+
+export const getAboutUsPage = async () => {
+  const response = await apiService.get(ABOUT_US_PAGE_URL);
   return response.data;
 };
