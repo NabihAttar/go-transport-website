@@ -189,7 +189,7 @@ export default async function Home() {
             <div className="container">
               <div className="row">
                 {/*Start Contact Page Top Content*/}
-                <div className="col-xl-6">
+                <div className="col-xl-6 ">
                   <div className="contact-page__top-content">
                     <div className="sec-title tg-heading-subheading animation-style2">
                       <div className="sec-title__tagline">
