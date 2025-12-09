@@ -8,6 +8,7 @@ const HOMEPAGE_URL = `api/homepage?populate[0]=heroSection&populate[1]=aboutSect
 const ABOUT_US_PAGE_URL = `api/aboutus-page?populate[0]=banner&populate[1]=banner.image&populate[2]=businessInfo&populate[3]=businessInfo.bigImage&populate[4]=businessInfo.smallImage&populate[5]=businessInfo.missionCard&populate[6]=businessInfo.vissionCard&populate[7]=whereWeOperate&populate[8]=whereWeOperate.image&populate[9]=whereWeOperate.countries`;
 
 const CONTACT_US_PAGE_URL = `api/contactus-page?populate[0]=banner&populate[1]=banner.image&populate[2]=contactUsCards`;
+const SERVICES_PAGE_URL = `api/services-page?populate[0]=banner&populate[1]=banner.image`;
 const LEADS_URL = "api/leads";
 
 apiService.setToken(API_TOKEN);
@@ -24,6 +25,11 @@ export const getAboutUsPage = async () => {
 
 export const getContactUsPage = async () => {
   const response = await apiService.get(CONTACT_US_PAGE_URL);
+  return response.data;
+};
+
+export const getServicePage = async () => {
+  const response = await apiService.get(SERVICES_PAGE_URL);
   return response.data;
 };
 
