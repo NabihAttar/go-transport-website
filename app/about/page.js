@@ -88,13 +88,21 @@ const buildPhoneHref = (phone) => {
   return `tel:${normalized}`;
 };
 
-const buildCmsImageUrl = (path = "") => {
+const buildImageUrl = (path = "") => {
   if (!path) return null;
-  if (isAbsoluteUrl(path) || isLocalAsset(path)) {
+  // If it's already an absolute URL, return it as is
+  if (isAbsoluteUrl(path)) {
     return path;
   }
+  // If it's a local asset, return it as is
+  if (isLocalAsset(path)) {
+    return path;
+  }
+  // Return API route URL instead of direct CMS URL
   const normalized = path.startsWith("/") ? path : `/${path}`;
-  return `${CMS_BASE_URL.replace(/\/$/, "")}${normalized}`;
+  // Remove leading slash if present for the API route
+  const apiPath = normalized.startsWith("/") ? normalized.slice(1) : normalized;
+  return `/api/getimage/${apiPath}`;
 };
 
 const getRequestBaseUrl = () => {
@@ -160,7 +168,8 @@ const resolveImagePaths = async (pathMap, baseUrl) => {
       return acc;
     }
 
-    acc[key] = resolvedFromFetch[key] || buildCmsImageUrl(path) || path;
+    // Use API-resolved URL if available, otherwise build API route URL
+    acc[key] = resolvedFromFetch[key] || buildImageUrl(path) || path;
     return acc;
   }, {});
 };
@@ -215,7 +224,7 @@ export default async function Home() {
   const operateDescription =
     whereWeOperate?.description?.trim() || DEFAULT_OPERATE_DESCRIPTION;
   const operateCountries = normalizeCountries(whereWeOperate?.countries);
-
+  console.log(bigImage);
   return (
     <>
       <Layout

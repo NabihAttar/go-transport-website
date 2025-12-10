@@ -67,6 +67,8 @@ const deriveInitialImage = (path, fallback) => {
   if (isAbsoluteUrl(path) || isLocalAsset(path)) {
     return path;
   }
+  // For paths that need resolution (like /uploads/...), return fallback initially
+  // The API will resolve it and update the state
   return fallback;
 };
 
@@ -137,19 +139,21 @@ const useResolvedImages = (bigPath, smallPath) => {
 
     let ignore = false;
 
+    // Fetch image URLs from API
     fetch(`/api/getIMagesURL?${params.toString()}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to resolve Why Choose Us images");
+          throw new Error("Failed to resolve image URLs");
         }
         return response.json();
       })
       .then((data) => {
         if (ignore) return;
-
         const resolvedImages = { ...baseImages };
 
+        // Handle API response - prioritize API URLs over base images
         if (Array.isArray(data.urls)) {
+          // Multiple images requested
           requestEntries.forEach((entry, index) => {
             const resolved = data.urls[index];
             if (resolved) {
@@ -157,13 +161,15 @@ const useResolvedImages = (bigPath, smallPath) => {
             }
           });
         } else if (requestEntries.length === 1 && data.url) {
+          // Single image requested
           resolvedImages[requestEntries[0].key] = data.url;
         }
 
         setImageUrls(resolvedImages);
       })
       .catch((error) => {
-        console.error("Failed to fetch Why Choose Us images:", error);
+        console.error("Failed to fetch image URLs:", error);
+        // Keep fallback images on error
       });
 
     return () => {
@@ -186,7 +192,6 @@ export default function WhyChooseUs({ whyUsSection }) {
   const bigImagePath = extractMediaPath(whyUsSection?.bigImage);
   const smallImagePath = extractMediaPath(whyUsSection?.smallImage);
   const imageUrls = useResolvedImages(bigImagePath, smallImagePath);
-
   return (
     <>
       <section
@@ -254,12 +259,15 @@ export default function WhyChooseUs({ whyUsSection }) {
                   <img src="assets/images/shapes/points.png" alt="" />
                 </div>
                 <div className="about-one__img1 reveal">
-                  <img src={imageUrls.big} alt="Why choose us main visual" />
+                  <img
+                    src={imageUrls.big || FALLBACK_BIG_IMAGE}
+                    alt="Why choose us main visual"
+                  />
                 </div>
                 <div className="about-one__img2">
                   <div className="about-one__img2-inner reveal">
                     <img
-                      src={imageUrls.small}
+                      src={imageUrls.small || FALLBACK_SMALL_IMAGE}
                       alt="Why choose us supporting visual"
                     />
                   </div>

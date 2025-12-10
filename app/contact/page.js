@@ -3,6 +3,7 @@ import Layout from "@/components/layout/Layout";
 import { getContactUsPage } from "@/core/repo";
 import Link from "next/link";
 import LeadForm from "@/components/forms/LeadForm";
+import { headers } from "next/headers";
 
 const CMS_BASE_URL =
   process.env.NEXT_PUBLIC_CMS_URL ||
@@ -52,6 +53,8 @@ const ICON_MAP = {
 const isAbsoluteUrl = (value = "") => /^https?:\/\//i.test(value);
 const isLocalAsset = (value = "") =>
   value?.startsWith("/assets/") || value?.startsWith("assets/");
+const needsResolution = (value) =>
+  Boolean(value) && !isAbsoluteUrl(value) && !isLocalAsset(value);
 
 const extractMediaPath = (image) => {
   if (!image) return null;
@@ -65,13 +68,90 @@ const extractMediaPath = (image) => {
   return image?.url || image?.path || null;
 };
 
-const buildCmsImageUrl = (path = "") => {
+const buildImageUrl = (path = "") => {
   if (!path) return null;
-  if (isAbsoluteUrl(path) || isLocalAsset(path)) {
+  // If it's already an absolute URL, return it as is
+  if (isAbsoluteUrl(path)) {
     return path;
   }
+  // If it's a local asset, return it as is
+  if (isLocalAsset(path)) {
+    return path;
+  }
+  // Return API route URL instead of direct CMS URL
   const normalized = path.startsWith("/") ? path : `/${path}`;
-  return `${CMS_BASE_URL.replace(/\/$/, "")}${normalized}`;
+  // Remove leading slash if present for the API route
+  const apiPath = normalized.startsWith("/") ? normalized.slice(1) : normalized;
+  return `/api/getimage/${apiPath}`;
+};
+
+const getRequestBaseUrl = () => {
+  const envBase =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.SITE_URL ||
+    process.env.NEXTAUTH_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
+  if (envBase) {
+    return envBase.replace(/\/$/, "");
+  }
+  const incomingHeaders = headers();
+  const host = incomingHeaders.get("host") || "localhost:3000";
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  return `${protocol}://${host}`;
+};
+
+const resolveImagePaths = async (pathMap, baseUrl) => {
+  const cleanedEntries = Object.entries(pathMap || {}).map(([key, value]) => [
+    key,
+    typeof value === "string" ? value.trim() : value || "",
+  ]);
+
+  const fetchEntries = cleanedEntries.filter(([, path]) =>
+    needsResolution(path)
+  );
+  const resolvedFromFetch = {};
+
+  if (fetchEntries.length) {
+    const params = new URLSearchParams();
+    fetchEntries.forEach(([, path]) => params.append("path", path));
+
+    try {
+      const response = await fetch(
+        `${baseUrl.replace(/\/$/, "")}/api/getIMagesURL?${params.toString()}`,
+        { cache: "no-store" }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data.urls)) {
+          fetchEntries.forEach(([key], index) => {
+            resolvedFromFetch[key] = data.urls[index] || null;
+          });
+        } else if (fetchEntries.length === 1 && data.url) {
+          resolvedFromFetch[fetchEntries[0][0]] = data.url;
+        }
+      } else {
+        console.error("Failed to resolve image URLs:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Failed to resolve image URLs:", error);
+    }
+  }
+
+  return cleanedEntries.reduce((acc, [key, path]) => {
+    if (!path) {
+      acc[key] = null;
+      return acc;
+    }
+
+    if (!needsResolution(path)) {
+      acc[key] = path;
+      return acc;
+    }
+
+    // Use API-resolved URL if available, otherwise build API route URL
+    acc[key] = resolvedFromFetch[key] || buildImageUrl(path) || path;
+    return acc;
+  }, {});
 };
 
 const splitLines = (value) => {
@@ -129,9 +209,16 @@ export default async function Home() {
   const subtitleLines = splitLines(heroSubtitle);
   const descriptionLines = splitLines(heroDescription);
 
+  const requestBaseUrl = getRequestBaseUrl();
+  const resolvedImages = await resolveImagePaths(
+    {
+      banner: extractMediaPath(banner?.image),
+    },
+    requestBaseUrl
+  );
+
   const bannerTitle = banner?.title?.trim() || "Contact";
-  const bgImage =
-    buildCmsImageUrl(extractMediaPath(banner?.image)) || FALLBACK_BANNER_IMAGE;
+  const bgImage = resolvedImages.banner || FALLBACK_BANNER_IMAGE;
 
   const contactCards = normalizeCards(contactData?.contactUsCards);
 

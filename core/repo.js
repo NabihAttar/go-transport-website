@@ -9,6 +9,7 @@ const ABOUT_US_PAGE_URL = `api/aboutus-page?populate[0]=banner&populate[1]=banne
 
 const CONTACT_US_PAGE_URL = `api/contactus-page?populate[0]=banner&populate[1]=banner.image&populate[2]=contactUsCards`;
 const SERVICES_PAGE_URL = `api/services-page?populate[0]=banner&populate[1]=banner.image`;
+const ALL_SERVICES_URL = `api/services?populate[0]=serviceData&populate[1]=serviceData.image`;
 const LEADS_URL = "api/leads";
 
 apiService.setToken(API_TOKEN);
@@ -30,6 +31,11 @@ export const getContactUsPage = async () => {
 
 export const getServicePage = async () => {
   const response = await apiService.get(SERVICES_PAGE_URL);
+  return response.data;
+};
+
+export const getAllServices = async () => {
+  const response = await apiService.get(ALL_SERVICES_URL);
   return response.data;
 };
 
