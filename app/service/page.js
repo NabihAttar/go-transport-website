@@ -3,6 +3,8 @@ import ServiceGridSection from "@/components/service/ServiceGridSection";
 import { getServicePage, getAllServices } from "@/core/repo";
 import { headers } from "next/headers";
 
+export const revalidate = 300;
+
 // Fallback services in case API fails
 const FALLBACK_SERVICES = [
   {

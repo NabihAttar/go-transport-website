@@ -29,7 +29,6 @@ export const get = async (path, params, fetchOptions = {}) => {
   const url = generatePath(path);
   const fullUrl = buildUrl(url, params);
   // Extract Next.js specific options (like revalidate) from fetchOptions
-
   const { next, ...restHeaders } = fetchOptions;
   const headers = generateHeader(restHeaders);
 

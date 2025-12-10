@@ -5,6 +5,8 @@ import WhyChooseUs from "@/components/sections/home1/WhyChooseUs";
 import Services from "@/components/sections/home2/Services";
 import { getHomepage } from "@/core/repo";
 
+export const revalidate = 300;
+
 export default async function Home() {
   const homepageData = await getHomepage();
   const heroSection = homepageData?.data?.heroSection;

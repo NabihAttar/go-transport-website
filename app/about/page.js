@@ -88,6 +88,8 @@ const buildPhoneHref = (phone) => {
   return `tel:${normalized}`;
 };
 
+export const revalidate = 300;
+
 const buildImageUrl = (path = "") => {
   if (!path) return null;
   // If it's already an absolute URL, return it as is

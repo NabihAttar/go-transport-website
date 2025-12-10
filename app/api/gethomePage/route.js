@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getHomepage } from "@/core/repo";
 
+export const revalidate = 300;
+
 export async function GET() {
   try {
     const data = await getHomepage();

@@ -15,27 +15,37 @@ const LEADS_URL = "api/leads";
 apiService.setToken(API_TOKEN);
 
 export const getHomepage = async () => {
-  const response = await apiService.get(HOMEPAGE_URL);
+  const response = await apiService.get(HOMEPAGE_URL, null, {
+    next: { revalidate: 300 },
+  });
   return response.data;
 };
 
 export const getAboutUsPage = async () => {
-  const response = await apiService.get(ABOUT_US_PAGE_URL);
+  const response = await apiService.get(ABOUT_US_PAGE_URL, null, {
+    next: { revalidate: 300 },
+  });
   return response.data;
 };
 
 export const getContactUsPage = async () => {
-  const response = await apiService.get(CONTACT_US_PAGE_URL);
+  const response = await apiService.get(CONTACT_US_PAGE_URL, null, {
+    next: { revalidate: 300 },
+  });
   return response.data;
 };
 
 export const getServicePage = async () => {
-  const response = await apiService.get(SERVICES_PAGE_URL);
+  const response = await apiService.get(SERVICES_PAGE_URL, null, {
+    next: { revalidate: 300 },
+  });
   return response.data;
 };
 
 export const getAllServices = async () => {
-  const response = await apiService.get(ALL_SERVICES_URL);
+  const response = await apiService.get(ALL_SERVICES_URL, null, {
+    next: { revalidate: 300 },
+  });
   return response.data;
 };
 

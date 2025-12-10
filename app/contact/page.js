@@ -193,6 +193,8 @@ const buildTelHref = (value = "") => {
   return cleaned ? `tel:${cleaned}` : "#";
 };
 
+export const revalidate = 300;
+
 export default async function Home() {
   const contactUsData = await getContactUsPage();
   console.log("Contact Us Page API response:", contactUsData);
