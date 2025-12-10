@@ -26,11 +26,16 @@ const buildImageUrl = (path = "") => {
     return null;
   }
 
+  // If it's already an absolute URL, return it as is
   if (isAbsoluteUrl(path)) {
     return path;
   }
 
-  return `${CMS_BASE_URL}${normalizePath(path)}`;
+  // Return API route URL instead of direct CMS URL
+  const normalizedPath = normalizePath(path);
+  // Remove leading slash if present for the API route
+  const apiPath = normalizedPath.startsWith("/") ? normalizedPath.slice(1) : normalizedPath;
+  return `/api/getimage/${apiPath}`;
 };
 
 export async function GET(request) {

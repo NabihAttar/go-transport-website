@@ -42,6 +42,8 @@ const deriveInitialImage = (path, fallback) => {
   if (isAbsoluteUrl(path) || isLocalAsset(path)) {
     return path;
   }
+  // For paths that need resolution (like /uploads/...), return fallback initially
+  // The API will resolve it and update the state
   return fallback;
 };
 
@@ -91,6 +93,7 @@ const useResolvedImages = (bigPath, smallPath) => {
 
     const requestEntries = [];
 
+    // Check if paths need resolution (like /uploads/... paths)
     if (needsResolution(bigPath)) {
       requestEntries.push({ key: "big", path: bigPath });
     }
@@ -103,11 +106,15 @@ const useResolvedImages = (bigPath, smallPath) => {
       return;
     }
 
+    // Build query parameters for API call
     const params = new URLSearchParams();
-    requestEntries.forEach(({ path }) => params.append("path", path));
+    requestEntries.forEach(({ path }) => {
+      params.append("path", path);
+    });
 
     let ignore = false;
 
+    // Fetch image URLs from API
     fetch(`/api/getIMagesURL?${params.toString()}`)
       .then((response) => {
         if (!response.ok) {
@@ -119,7 +126,9 @@ const useResolvedImages = (bigPath, smallPath) => {
         if (ignore) return;
         const resolvedImages = { ...baseImages };
 
+        // Handle API response - prioritize API URLs over base images
         if (Array.isArray(data.urls)) {
+          // Multiple images requested
           requestEntries.forEach((entry, index) => {
             const resolved = data.urls[index];
             if (resolved) {
@@ -127,6 +136,7 @@ const useResolvedImages = (bigPath, smallPath) => {
             }
           });
         } else if (requestEntries.length === 1 && data.url) {
+          // Single image requested
           resolvedImages[requestEntries[0].key] = data.url;
         }
 
@@ -134,6 +144,7 @@ const useResolvedImages = (bigPath, smallPath) => {
       })
       .catch((error) => {
         console.error("Failed to fetch image URLs:", error);
+        // Keep fallback images on error
       });
 
     return () => {
@@ -163,7 +174,6 @@ export default function About({ aboutSection }) {
   const bigImagePath = extractMediaPath(aboutSection?.bigImage);
   const smallImagePath = extractMediaPath(aboutSection?.smallImage);
   const imageUrls = useResolvedImages(bigImagePath, smallImagePath);
-
   return (
     <>
       <section
@@ -185,12 +195,18 @@ export default function About({ aboutSection }) {
                   <img src="assets/images/shapes/points.png" alt="" />
                 </div>
                 <div className="about-one__img1 reveal">
-                  <img src={imageUrls.big} alt="About section main" />
+                  <img
+                    src={imageUrls.big || FALLBACK_BIG_IMAGE}
+                    alt="About section main"
+                  />
                 </div>
 
                 <div className="about-one__img2">
                   <div className="about-one__img2-inner reveal">
-                    <img src={imageUrls.small} alt="About section secondary" />
+                    <img
+                      src={imageUrls.small || FALLBACK_SMALL_IMAGE}
+                      alt="About section secondary"
+                    />
                   </div>
 
                   <div className="shape3 float-bob-y">
