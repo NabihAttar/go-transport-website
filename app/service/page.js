@@ -266,7 +266,6 @@ export default async function ServicePage() {
   );
 
   const bgImage = resolvedImages.banner || FALLBACK_BANNER_IMAGE;
-  console.log(servicesWithResolvedImages);
   return (
     <Layout
       headerStyle={1}
